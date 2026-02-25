@@ -10,6 +10,6 @@ class Floor extends Model
     use HasFactory;
     //
     protected $fillable = [
-        'name',
+        'floor_name',
     ];
 }
