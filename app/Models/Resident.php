@@ -3,8 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Resident extends Model
 {
-    //
+    use HasFactory;
+
+    //Userとのリレーション(多対1)
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    //KnowledgePostとのリレーション(1対多)
+    public function knowledgePost()
+    {
+        return $this->hasMany(knowledgePost::class);
+    }
 }
