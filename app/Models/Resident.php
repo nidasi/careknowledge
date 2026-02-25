@@ -9,6 +9,11 @@ class Resident extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'name',
+    ];
+
     //Userとのリレーション(多対1)
     public function user()
     {
