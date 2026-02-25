@@ -16,8 +16,8 @@ class Resident extends Model
     }
 
     //KnowledgePostとのリレーション(1対多)
-    public function knowledgePost()
+    public function knowledgePosts()
     {
-        return $this->hasMany(knowledgePost::class);
+        return $this->hasMany(KnowledgePost::class);
     }
 }
