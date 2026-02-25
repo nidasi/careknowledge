@@ -11,7 +11,9 @@ class Resident extends Model
 
     protected $fillable = [
         'user_id',
-        'name',
+        'floor_id',
+        'resident_name',
+        'room_number',
     ];
 
     //Userとのリレーション(多対1)
