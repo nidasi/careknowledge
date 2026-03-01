@@ -9,9 +9,20 @@ class KnowledgePost extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'resident_id',
+        'user_id',
+        'knowledge_title',
+        'knowledge_content',
+        'status',
+        'published_at',
+    ];
+
+
     //Resident(入居者)との関係:多対1
     public function resident()
     {
+
         return $this->belongsTo(Resident::class);
     }
 

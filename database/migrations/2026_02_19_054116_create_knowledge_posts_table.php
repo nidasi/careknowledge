@@ -13,6 +13,22 @@ return new class extends Migration
     {
         Schema::create('knowledge_posts', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('resident_id')
+                ->constrained()
+                ->onDelete('cascade');
+
+            $table->foreignId('user_id')
+                ->constrained()
+                ->onDelete('cascade');
+
+
+            $table->string('knowledge_title');
+            $table->text('knowledge_content');
+
+            $table->string('status')->default('draft');
+            $table->timestamp('published_at')->nullable();
+
             $table->timestamps();
         });
     }
