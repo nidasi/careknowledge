@@ -15,15 +15,17 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')
+                ->nullable()
                 ->constrained()
-                ->onDelete('cascade');
+                ->nullOnDelete('');
 
             $table->foreignId('floor_id')
+                ->nullable()
                 ->constrained()
-                ->onDelete('cascade');
+                ->nullOnDelete('');
 
             $table->string('resident_name');
-            $table->string('room_number');
+            $table->string('room_number')->nullable();
 
             $table->timestamps();
         });
