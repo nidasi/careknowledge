@@ -22,7 +22,10 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
 
-            $table->timestamps();
+                //複合主キー
+                $table->primary(['knowledge_post_id','tag_id'])
+
+
         });
     }
 
