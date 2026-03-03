@@ -13,7 +13,7 @@ class Floor extends Model
         'floor_name',
     ];
     // floor 複数のresident持つ(1対多)
-    public function resident()
+    public function residents()
     {
         return $this->hasMany(Resident::class);
     }
