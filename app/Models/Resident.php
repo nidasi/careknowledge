@@ -22,6 +22,12 @@ class Resident extends Model
         return $this->belongsTo(User::class);
     }
 
+    //Floor リレーション
+    public function floor()
+    {
+        return $this->belongsTo(Floor::class);
+    }
+
     //KnowledgePostとのリレーション(1対多)
     public function knowledgePosts()
     {
