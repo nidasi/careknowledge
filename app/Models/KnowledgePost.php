@@ -18,17 +18,21 @@ class KnowledgePost extends Model
         'published_at',
     ];
 
+    //投稿したユーザー
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-    //Resident(入居者)との関係:多対1
+    //対象の利用者
     public function resident()
     {
-
         return $this->belongsTo(Resident::class);
     }
 
     //Tag(タグ)との関係:多対多
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class, 'knowledge_post_tag');
     }
 }
