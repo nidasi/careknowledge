@@ -12,4 +12,9 @@ class Floor extends Model
     protected $fillable = [
         'floor_name',
     ];
+    // floor 複数のresident持つ(1対多)
+    public function resident()
+    {
+        return $this->hasMany(Resident::class);
+    }
 }
