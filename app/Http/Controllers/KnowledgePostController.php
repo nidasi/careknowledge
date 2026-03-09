@@ -9,11 +9,47 @@ class KnowledgePostController extends Controller
 {
     public function index()
     {
-        //公開済みだけ取得
-        $posts = KnowledgePost::where('status', 'published')
+        //
+        $posts = KnowledgePost::with('user', 'resident', 'tags')
+            ->where('status', 'published')
             ->orderBy('published_at', 'desc')
-            ->get();
+            ->paginate(10);
 
+        //
         return view('knowledge_posts.index', compact('posts'));
+    }
+
+    public function create()
+    {
+
+    }
+
+    public function store()
+    {
+        //バリデーション
+        $validated = $request->validate([
+            'knowledge_title'
+        ])
+
+    }
+
+    public function show()
+    {
+
+    }
+
+    public function edit()
+    {
+
+    }
+
+    public function update()
+    {
+        //
+    }
+
+    public function destroy()
+    {
+        //
     }
 }
