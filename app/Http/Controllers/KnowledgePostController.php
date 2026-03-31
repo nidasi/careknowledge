@@ -34,10 +34,7 @@ class KnowledgePostController extends Controller
         ]);
 
         $post = KnowledgePost::create([
-            'knowledge_title' => $validated['knowledge_title'],
-            'knowledge_content' => $validated['knowledge_content'],
-            'resident_id' => $validated['resident_id'] ?? null,
-            'status' => $validated['status'],
+            ...collect($validated)->except('tags')->toArray(),
             'published_at' => $validated['status'] === 'published' ? now() : null,
             'user_id' => auth()->id(),
         ]);
@@ -50,13 +47,30 @@ class KnowledgePostController extends Controller
             ->with('success', '投稿を作成しました');
     }
 
-    public function show() {}
-
-    public function edit() {}
-
-    public function update()
+    public function show(KnowledgePost $post)
     {
-        //
+        $post->load(['resident', 'tags','user']);
+        return view('knowledge_posts.show', compact('post'));
+    }
+
+    public function edit(KnowledgePost $post)
+    {
+        $tags = Tag::all();
+        $post->load('tags');
+        return view('knowledge_post.edit',compact('post','tags'));
+    }
+
+    public function update(Request $request, KnowledgePost $post)
+    {
+        $validated = $request->validate([
+            'knowlede_title' => 'required|string|max:255',
+            'knowlede_content' => 'required|string',
+            'resident_id' => 'nullable|exists:residents,id',
+            'status' => 'array',
+            'tags.*' => 'exists:tags,id',
+        ]);
+
+        $post
     }
 
     public function destroy()
