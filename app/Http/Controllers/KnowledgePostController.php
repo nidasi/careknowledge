@@ -70,7 +70,16 @@ class KnowledgePostController extends Controller
             'tags.*' => 'exists:tags,id',
         ]);
 
-        $post
+        $post->update([
+            ...collect($validated)->except('tags')->toArray(),
+            'published_at' => $validated['status'] === 'published'
+                ? ($post->published_at ?? now())
+                : null,
+        ]);
+        $post->tags()->sync($validated['tags'] ?? []);
+
+        return rederect()->route('knowledge-posts.index')
+            ->with('success','投稿を更新しました');
     }
 
     public function destroy()
