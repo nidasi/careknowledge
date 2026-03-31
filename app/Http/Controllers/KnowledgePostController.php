@@ -49,7 +49,7 @@ class KnowledgePostController extends Controller
 
     public function show(KnowledgePost $post)
     {
-        $post->load(['resident', 'tags','user']);
+        $post->load(['resident', 'tags', 'user']);
         return view('knowledge_posts.show', compact('post'));
     }
 
@@ -57,7 +57,7 @@ class KnowledgePostController extends Controller
     {
         $tags = Tag::all();
         $post->load('tags');
-        return view('knowledge_post.edit',compact('post','tags'));
+        return view('knowledge_post.edit', compact('post', 'tags'));
     }
 
     public function update(Request $request, KnowledgePost $post)
@@ -79,11 +79,13 @@ class KnowledgePostController extends Controller
         $post->tags()->sync($validated['tags'] ?? []);
 
         return rederect()->route('knowledge-posts.index')
-            ->with('success','投稿を更新しました');
+            ->with('success', '投稿を更新しました');
     }
 
-    public function destroy()
+    public function destroy(KnowledgePost $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('knowledge-post.index')
+            ->with('success', '投稿を削除しました');
     }
 }
