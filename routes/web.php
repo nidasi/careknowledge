@@ -13,12 +13,15 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
+    // プロフィール
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/knowledge-posts', [KnowledgePostController::class, 'index'])
-        ->name('knowledge-posts.index');
+    //ナレッジ投稿(CRUD)
+    Route::resource('knowledge-posts',KnowledgePostController::class);
+
 });
 
 require __DIR__ . '/auth.php';

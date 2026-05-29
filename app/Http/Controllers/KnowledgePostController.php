@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\KnowledgePost;
+use App\Models\Tag;
+use App\Models\Resident;
 
 class KnowledgePostController extends Controller
 {
@@ -19,7 +21,13 @@ class KnowledgePostController extends Controller
         return view('knowledge_posts.index', compact('posts'));
     }
 
-    public function create() {}
+    public function create()
+    {
+        $tags = Tag::all();
+        $residents = Resident::all();
+
+        return view('knowledge_posts.create', compact('tags', 'residents'));
+    }
 
     public function store(Request $request)
     {
@@ -56,17 +64,20 @@ class KnowledgePostController extends Controller
     public function edit(KnowledgePost $post)
     {
         $tags = Tag::all();
+        $residents = Resident::all();
         $post->load('tags');
-        return view('knowledge_post.edit', compact('post', 'tags'));
+
+        return view('knowledge_posts.edit', compact('post', 'tags', 'residents'));
     }
 
     public function update(Request $request, KnowledgePost $post)
     {
         $validated = $request->validate([
-            'knowlede_title' => 'required|string|max:255',
-            'knowlede_content' => 'required|string',
+            'knowledge_title' => 'required|string|max:255',
+            'knowledge_content' => 'required|string',
             'resident_id' => 'nullable|exists:residents,id',
-            'status' => 'array',
+            'status' => 'required|in:draft,published',
+            'tags' => 'array',
             'tags.*' => 'exists:tags,id',
         ]);
 
@@ -78,14 +89,14 @@ class KnowledgePostController extends Controller
         ]);
         $post->tags()->sync($validated['tags'] ?? []);
 
-        return rederect()->route('knowledge-posts.index')
+        return redirect()->route('knowledge-posts.index')
             ->with('success', '投稿を更新しました');
     }
 
     public function destroy(KnowledgePost $post)
     {
         $post->delete();
-        return redirect()->route('knowledge-post.index')
+        return redirect()->route('knowledge-posts.index')
             ->with('success', '投稿を削除しました');
     }
 }
