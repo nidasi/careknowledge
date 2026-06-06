@@ -18,7 +18,7 @@
             {{-- 検索フォーム --}}
             <form method="GET" action="{{ route('knowledge-posts.index') }}" class ="mb-6 flex gap-2">
                 <input type="text" name="keyword" placeholder="タイトル検索" value="{{ request('keyword') }}"
-                    class= "border px-3 py-2 rounded w-1/3">
+                    class= "border px-3 py-2 rounded w-full sm:w-1/3">
 
                 <button class="bg-gray-700 text-white px-4 py-2 rounded">
                     検索
@@ -69,7 +69,7 @@
 
             {{-- ページネーション --}}
             <div class="mt-6">
-                {{ $posts->links() }}
+                {{ $posts->appends(request()->query())->links() }}
             </div>
 
         </div>

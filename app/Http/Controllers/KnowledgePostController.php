@@ -9,13 +9,22 @@ use App\Models\Resident;
 
 class KnowledgePostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $posts = KnowledgePost::with('user', 'resident', 'tags')
+        $query = KnowledgePost::with('user', 'resident', 'tags')
             ->where('status', 'published')
-            ->orderBy('published_at', 'desc')
-            ->paginate(10);
+            ->orderBy('published_at', 'desc');
+
+        if ($request->filled('keyword')) {
+            $query->where('knowledge_title', 'like', '%' . $request->keyword . '%');
+        }
+
+        $posts = $query->paginate(10);
+        //
+        //$posts = KnowledgePost::with('user', 'resident', 'tags')
+        //->where('status', 'published')
+        //->orderBy('published_at', 'desc')
+        //->paginate(10);
 
         //
         return view('knowledge_posts.index', compact('posts'));
