@@ -19,5 +19,12 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        //ResidentとTagのSeeder追加し実行
+        $this->call([
+            FloorSeeder::class,
+            ResidentSeeder::class,
+            TagSeeder::class,
+        ]);
     }
 }

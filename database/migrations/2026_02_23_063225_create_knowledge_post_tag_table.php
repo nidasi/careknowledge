@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('knowledge_post_tag', function (Blueprint $table) {
-            $table->id();
 
             $table->foreignId('knowledge_post_id')
                 ->constrained()
@@ -22,10 +21,8 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
 
-                //複合主キー
-                $table->primary(['knowledge_post_id','tag_id'])
-
-
+            //複合主キー
+            $table->primary(['knowledge_post_id', 'tag_id']);
         });
     }
 
