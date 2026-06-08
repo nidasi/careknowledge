@@ -12,8 +12,8 @@
 
         {{-- 投稿者・公開日 --}}
         <p class="text-sm text-gray-500 mb-2">
-            投稿日: {{ $post->user?->name ?? '不明なユーザー' }}
-            / {{ $post->published_at?->format('Y/m/d') ?? '未公開' }}
+            投稿者: {{ $post->user?->name ?? '不明なユーザー' }}
+            / 投稿日: {{ $post->published_at?->format('Y/m/d') ?? '未公開' }}
         </p>
 
         {{-- 入居者 --}}
@@ -54,22 +54,23 @@
                 class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                 一覧へ戻る
             </a>
+            @if (auth()->id() === $post->user_id)
+                <div class="flex gap-2">
+                    <a
+                        href="{{ route('knowledge-posts.edit', $post) }}"class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                        編集
+                    </a>
 
-            <div class="flex gap-2">
-                <a
-                    href="{{ route('knowledge-posts.edit', $post) }}"class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
-                    編集
-                </a>
-
-                <form action="{{ route('knowledge-posts.destroy', $post) }}" method="POST"
-                    onsubmit="return confirm('削除してもよろしいですか？');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                        削除
-                    </button>
-                </form>
-            </div>
+                    <form action="{{ route('knowledge-posts.destroy', $post) }}" method="POST"
+                        onsubmit="return confirm('削除してもよろしいですか？');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                            削除
+                        </button>
+                    </form>
+                </div>
+            @endif
         </div>
 
 
