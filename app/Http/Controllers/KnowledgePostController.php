@@ -20,11 +20,6 @@ class KnowledgePostController extends Controller
         }
 
         $posts = $query->paginate(10);
-        //
-        //$posts = KnowledgePost::with('user', 'resident', 'tags')
-        //->where('status', 'published')
-        //->orderBy('published_at', 'desc')
-        //->paginate(10);
 
         //
         return view('knowledge_posts.index', compact('posts'));
@@ -32,8 +27,8 @@ class KnowledgePostController extends Controller
 
     public function create()
     {
-        $tags = Tag::all();
-        $residents = Resident::all();
+        $tags = Tag::orderBy('tag_name')->get();
+        $residents = Resident::orderBy('resident_name')->get();
 
         return view('knowledge_posts.create', compact('tags', 'residents'));
     }
@@ -72,38 +67,53 @@ class KnowledgePostController extends Controller
 
     public function edit(KnowledgePost $post)
     {
-        $tags = Tag::all();
-        $residents = Resident::all();
+        //権限チェック(本人のみ編集可)
+        abort_if(auth()->id() !== $post->user_id, 403);
+
         $post->load('tags');
 
-        return view('knowledge_posts.edit', compact('post', 'tags', 'residents'));
+        $residents = Resident::orderBy('resident_name')->get();
+        $tags = Tag::orderBy('tag_name')->get();
+
+        return view('knowledge_posts.edit', compact('post', 'residents', 'tags',));
     }
 
     public function update(Request $request, KnowledgePost $post)
     {
+        abort_if(auth()->id() !== $post->user_id, 403);
+
         $validated = $request->validate([
-            'knowledge_title' => 'required|string|max:255',
-            'knowledge_content' => 'required|string',
-            'resident_id' => 'nullable|exists:residents,id',
-            'status' => 'required|in:draft,published',
-            'tags' => 'array',
-            'tags.*' => 'exists:tags,id',
+            'knowledge_title' => ['required', 'string', 'max:255'],
+            'knowledge_content' => ['required', 'string'],
+            'resident_id' => ['nullable', 'exists:residents,id'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['exists:tags,id'],
+            'status' => ['required', 'in:draft,published'],
         ]);
 
-        $post->update([
-            ...collect($validated)->except('tags')->toArray(),
-            'published_at' => $validated['status'] === 'published'
-                ? ($post->published_at ?? now())
-                : null,
-        ]);
+        $data = collect($validated)
+            ->except('tags')->toArray();
+        if ($validated['status'] === 'published' && !$post->published_at) {
+            $data['published_at'] = now();
+        }
+
+        if ($validated['status'] === 'draft') {
+            $data['published_at'] = null;
+        }
+
+        $post->update($data);
+
         $post->tags()->sync($validated['tags'] ?? []);
 
-        return redirect()->route('knowledge-posts.index')
+        return redirect()->route('knowledge-posts.show', $post)
             ->with('success', '投稿を更新しました');
     }
 
     public function destroy(KnowledgePost $post)
     {
+        //本人のみ削除可
+        abort_if(auth()->id() !== $post->user_id, 403);
+
         $post->delete();
         return redirect()->route('knowledge-posts.index')
             ->with('success', '投稿を削除しました');
