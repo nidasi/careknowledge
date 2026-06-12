@@ -12,7 +12,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('web', 'auth')->group(function () {
 
     // プロフィール
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -20,8 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     //ナレッジ投稿(CRUD)
-    Route::resource('knowledge-posts',KnowledgePostController::class);
-
+    Route::resource('knowledge-posts', KnowledgePostController::class)
+        ->parameters(['knowledge-posts' => 'post']);
 });
 
 require __DIR__ . '/auth.php';

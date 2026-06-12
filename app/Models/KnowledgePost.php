@@ -18,6 +18,10 @@ class KnowledgePost extends Model
         'published_at',
     ];
 
+    protected $casts = [
+        'published_at' => 'datetime',
+    ];
+
     //投稿したユーザー
     public function user()
     {

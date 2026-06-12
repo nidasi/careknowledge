@@ -61,6 +61,20 @@ class KnowledgePostController extends Controller
 
     public function show(KnowledgePost $post)
     {
+        //dd([
+        //'post_id' => $post->id,
+        //'user_id' => $post->user_id,
+        //'auth_id' => auth()->id(),
+        //'equal' => auth()->id() == $post->user_id,
+        //'user_relation' => $post->user,
+        //]);
+
+        //$post->load(['resident', 'tags', 'user']);
+
+        //$post = $knowledgePost;
+        //$post->load(['resident','tags','user']);
+        //$post = KnowledgePost::with(['resident', 'tags', 'user'])
+        //->findOrFail($post->id);
         $post->load(['resident', 'tags', 'user']);
         return view('knowledge_posts.show', compact('post'));
     }
