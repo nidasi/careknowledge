@@ -2,8 +2,7 @@
 nixPkgs = [
   "php82",
   "php82Packages.composer",
-  "nodejs",
-  "npm",
+  "nodejs_20",
   "php82Extensions.pdo",
   "php82Extensions.pdo_mysql",
   "php82Extensions.mbstring",
@@ -28,6 +27,3 @@ cmds = [
 
 [phases.start]
 start = "php artisan serve --host=0.0.0.0 --port=$PORT"
-
-
-
