@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('floor_id')
                 ->nullable()
                 ->constrained()
-                ->nullOnDelete('');
+                ->nullOnDelete();
 
             $table->string('resident_name');
             $table->string('room_number')->nullable();
