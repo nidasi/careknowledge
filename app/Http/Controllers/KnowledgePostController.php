@@ -15,11 +15,9 @@ class KnowledgePostController extends Controller
             ->where('status', 'published')
             ->orderBy('published_at', 'desc');
 
-        if ($request->filled('keyword')) {
-            $query->where('knowledge_title', 'like', '%' . $request->keyword . '%');
-        }
+        $query->search($request->keyword);
 
-        $posts = $query->paginate(10);
+        $posts = $query->paginate(10)->withQueryString();
 
         //
         return view('knowledge_posts.index', compact('posts'));
