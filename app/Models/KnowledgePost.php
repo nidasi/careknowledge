@@ -39,4 +39,51 @@ class KnowledgePost extends Model
     {
         return $this->belongsToMany(Tag::class, 'knowledge_post_tag');
     }
+    //OR検索(単一キーワード検索)
+    public function scopeSearch($query, $keyword)
+    {
+        if (!$keyword) return $query;
+
+        return $query->where(function ($q) use ($keyword) {
+            $q->where('knowledge_title', 'like', "%{$keyword}%")
+                ->orWhere('knowledge_content', 'like', "%{$keyword}%")
+                ->orWhereHas('resident', fn($r) => $r->where('resident_name', 'like', "%{$keyword}%"))
+                ->orWhereHas('tags', fn($t) => $t->where('tag_name', 'like', "%{$keyword}%"));
+        });
+    }
+
+    //AND検索(複数キーワード)
+    public function scopeSearchKeyword($query, ?string $keyword)
+    {
+        if (blank($keyword)) {
+            return $query;
+        }
+
+        $keywords = preg_split(
+            '/[\s  ]+/u',
+            trim($keyword),
+            -1,
+            PREG_SPLIT_NO_EMPTY
+        );
+
+        return $query->where(function ($q) use ($keywords) {
+
+            foreach ($keywords as $word) {
+
+                $word = addcslashes($word, '%_\\');
+
+                $q->where(function ($q2) use ($word) {
+
+                    $q2->where('knowledge_title', 'like', "%{$word}%")
+                        ->orWhere('knowledge_content', 'like', "%{$word}%")
+                        ->orWhereHas('resident', function ($r) use ($word) {
+                            $r->where('resident_name', 'like', "%{$word}%");
+                        })
+                        ->orWhereHas('tags', function ($t) use ($word) {
+                            $t->where('tag_name', 'like', "%{$word}%");
+                        });
+                });
+            }
+        });
+    }
 }
