@@ -53,9 +53,8 @@
                     <div class="mt-2">
                         @if ($post->tags->isNotEmpty())
                             @foreach ($post->tags as $tag)
-                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1">
-                                    {{ $tag->tag_name }}
-                                </span>
+                                <a href="{{ route('knowledge-posts.index', ['tags_id => $tag->id']) }}"
+                                    class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1 hover:bg-blue-200">{{ $tag->tag_name }}</a>
                             @endforeach
                         @else
                             <span class="text-gray-400 text-xs">タグなし</span>
@@ -69,7 +68,7 @@
 
             {{-- ページネーション --}}
             <div class="mt-6">
-                {{ $posts->appends(request()->query())->links() }}
+                {{ $posts->links() }}
             </div>
 
         </div>

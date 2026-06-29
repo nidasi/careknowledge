@@ -74,4 +74,16 @@ class KnowledgePost extends Model
             }
         });
     }
+
+    //タグクリック検索
+    public function scopeSearchTag($query, $tagId)
+    {
+        if (blank($tagId)) {
+            return $query;
+        }
+
+        return $query->whereHas('tags', function ($q) use ($tagId) {
+            $q->where('tags.id', $tagId);
+        });
+    }
 }

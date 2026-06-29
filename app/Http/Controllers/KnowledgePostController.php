@@ -12,15 +12,17 @@ class KnowledgePostController extends Controller
     public function index(Request $request)
     {
         $query = KnowledgePost::with('user', 'resident', 'tags')
-            ->where('status', 'published')
-            ->orderBy('published_at', 'desc');
+            ->published()
+            ->searchKeyword($request->keyword)
+            ->searchTag($request->tag_id);
 
-        $query->search($request->keyword);
+        $total = $query->count();
 
         $posts = $query->paginate(10)->withQueryString();
 
-        //
-        return view('knowledge_posts.index', compact('posts'));
+        $tags = Tag::orderBy('tag_name')->get();
+
+        return view('knowledge_posts.index', compact('posts', 'tags', 'total'));
     }
 
     public function create()
