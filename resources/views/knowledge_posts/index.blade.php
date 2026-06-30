@@ -53,7 +53,7 @@
                     <div class="mt-2">
                         @if ($post->tags->isNotEmpty())
                             @foreach ($post->tags as $tag)
-                                <a href="{{ route('knowledge-posts.index', ['tags_id' => $tag->id]) }}"
+                                <a href="{{ route('knowledge-posts.index', ['tag_id' => $tag->id]) }}"
                                     class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1 hover:bg-blue-200">{{ $tag->tag_name }}</a>
                             @endforeach
                         @else
