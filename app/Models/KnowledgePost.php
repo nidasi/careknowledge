@@ -41,7 +41,7 @@ class KnowledgePost extends Model
     }
 
     //AND検索(複数キーワード)
-    public function scopeSearch($query, ?string $keyword)
+    public function scopeSearchKeyword($query, ?string $keyword)
     {
         if (blank($keyword)) {
             return $query;
@@ -85,5 +85,10 @@ class KnowledgePost extends Model
         return $query->whereHas('tags', function ($q) use ($tagId) {
             $q->where('tags.id', $tagId);
         });
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->whereNotNull('published_at');
     }
 }
